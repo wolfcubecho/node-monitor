@@ -1,13 +1,6 @@
 #!/bin/bash
 
-# Ensure the script is sourced if piped to bash
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    if [[ "${0}" == "bash" ]]; then
-        source /dev/stdin
-        exit 0
-    fi
-fi
-
+bash <<'EOL'
 set -e  # Exit immediately if a command exits with a non-zero status.
 
 echo "Starting setup script..."
@@ -44,7 +37,7 @@ prompt_variable TELEGRAM_BOT_TOKEN "Enter your Telegram Bot Token"
 prompt_variable TELEGRAM_CHAT_ID "Enter your Telegram Chat ID"
 
 echo "Creating .env file..."
-sudo tee /root/node.monitor/.env > /dev/null << EOL
+sudo tee /root/node.monitor/.env > /dev/null << EOF
 NODE_WALLET_ID=$NODE_WALLET_ID
 ONLINE_STATUS_URL="$ONLINE_STATUS_URL"
 POW_SIGNAL_URL="$POW_SIGNAL_URL"
@@ -53,7 +46,7 @@ TELEGRAM_CHAT_ID=$TELEGRAM_CHAT_ID
 COOLDOWN_PERIOD=$COOLDOWN_PERIOD
 POW_COOLDOWN_PERIOD=$POW_COOLDOWN_PERIOD
 TESTING_MODE=$TESTING_MODE
-EOL
+EOF
 
 echo ".env file created successfully."
 
@@ -64,7 +57,7 @@ sudo chmod +x /root/node.monitor/node_monitor.sh
 echo "Main script downloaded and made executable."
 
 echo "Creating systemd service file..."
-sudo tee /etc/systemd/system/node_monitor.service > /dev/null << EOL
+sudo tee /etc/systemd/system/node_monitor.service > /dev/null << EOF
 [Unit]
 Description=Node Monitor Service
 After=network.target
@@ -81,7 +74,7 @@ StandardError=journal
 
 [Install]
 WantedBy=multi-user.target
-EOL
+EOF
 
 echo "Systemd service file created."
 
@@ -93,3 +86,4 @@ sudo systemctl start node_monitor.service
 echo "Setup complete! Your Node Monitor is now running."
 echo "You can check its status with: systemctl status node_monitor.service"
 echo "And view logs with: journalctl -u node_monitor.service -f"
+EOL
