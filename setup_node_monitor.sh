@@ -1,6 +1,21 @@
 #!/bin/bash
 
-bash <<'EOL'
+# Download the script to a temporary file
+TMP_SCRIPT=$(mktemp)
+curl -s https://raw.githubusercontent.com/wolfcubecho/node-monitor/main/setup_node_monitor.sh > "$TMP_SCRIPT"
+
+# Make the temporary script executable
+chmod +x "$TMP_SCRIPT"
+
+# Execute the temporary script
+sudo bash "$TMP_SCRIPT"
+
+# Remove the temporary script
+rm "$TMP_SCRIPT"
+
+exit 0
+
+# The actual setup script starts here
 set -e  # Exit immediately if a command exits with a non-zero status.
 
 echo "Starting setup script..."
@@ -91,4 +106,3 @@ sudo systemctl start node_monitor.service
 echo "Setup complete! Your Node Monitor is now running."
 echo "You can check its status with: systemctl status node_monitor.service"
 echo "And view logs with: journalctl -u node_monitor.service -f"
-EOL
