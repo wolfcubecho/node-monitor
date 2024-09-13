@@ -11,9 +11,14 @@ prompt_variable() {
     local var_description="$2"
     local user_input
 
-    while [ -z "${!var_name}" ]; do
+    while true; do
         read -p "$var_description: " user_input
-        eval "$var_name='$user_input'"
+        if [ -n "$user_input" ]; then
+            eval "$var_name='$user_input'"
+            break
+        else
+            echo "Input cannot be empty. Please try again."
+        fi
     done
 }
 
