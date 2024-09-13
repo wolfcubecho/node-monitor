@@ -11,10 +11,12 @@ prompt_variable() {
     local var_description="$2"
     local user_input
 
+    echo "Prompting for $var_name"
     while [ -z "${!var_name}" ]; do
         read -p "$var_description: " user_input
         eval "$var_name='$user_input'"
     done
+    echo "$var_name set to ${!var_name}"
 }
 
 echo "Welcome to the Node Monitor Setup!"
@@ -37,7 +39,7 @@ prompt_variable TELEGRAM_BOT_TOKEN "Enter your Telegram Bot Token"
 prompt_variable TELEGRAM_CHAT_ID "Enter your Telegram Chat ID"
 
 echo "Creating .env file..."
-cat << EOL | sudo tee /root/node.monitor/.env > /dev/null
+sudo tee /root/node.monitor/.env > /dev/null << EOL
 NODE_WALLET_ID=$NODE_WALLET_ID
 ONLINE_STATUS_URL="$ONLINE_STATUS_URL"
 POW_SIGNAL_URL="$POW_SIGNAL_URL"
@@ -49,6 +51,8 @@ TESTING_MODE=$TESTING_MODE
 EOL
 
 echo ".env file created successfully."
+echo "Contents of .env file:"
+sudo cat /root/node.monitor/.env
 
 echo "Downloading main script..."
 sudo curl -o /root/node.monitor/node_monitor.sh https://raw.githubusercontent.com/wolfcubecho/node-monitor/main/node_monitor.sh
@@ -57,7 +61,7 @@ sudo chmod +x /root/node.monitor/node_monitor.sh
 echo "Main script downloaded and made executable."
 
 echo "Creating systemd service file..."
-cat << EOL | sudo tee /etc/systemd/system/node_monitor.service > /dev/null
+sudo tee /etc/systemd/system/node_monitor.service > /dev/null << EOL
 [Unit]
 Description=Node Monitor Service
 After=network.target
