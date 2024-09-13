@@ -23,6 +23,9 @@ echo "Welcome to the Node Monitor Setup!"
 echo "This script will guide you through setting up the Node Monitor."
 echo
 
+# Create directory if it doesn't exist
+sudo mkdir -p /root/node.monitor
+
 # Prompt for variables
 prompt_variable NODE_WALLET_ID "Enter your Node Wallet ID"
 prompt_variable ONLINE_STATUS_URL "Enter the Online Status URL" "https://api-testnet.lilypad.tech/metrics-dashboard/nodes"
@@ -48,7 +51,7 @@ EOL
 echo ".env file created successfully."
 
 # Download the main script
-curl -o /root/node.monitor/node_monitor.sh https://raw.githubusercontent.com/wolfcubecho/node-monitor/main/setup_node_monitor.sh
+curl -o /root/node.monitor/node_monitor.sh https://raw.githubusercontent.com/wolfcubecho/node-monitor/main/node_monitor.sh
 chmod +x /root/node.monitor/node_monitor.sh
 
 echo "Main script downloaded and made executable."
