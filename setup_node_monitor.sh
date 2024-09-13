@@ -4,18 +4,12 @@
 prompt_variable() {
     local var_name=$1
     local var_description=$2
-    local default_value=$3
     local user_input
 
-    if [ -n "$default_value" ]; then
-        read -p "$var_description [$default_value]: " user_input
-        eval $var_name="${user_input:-$default_value}"
-    else
-        while [ -z "${!var_name}" ]; do
-            read -p "$var_description: " user_input
-            eval $var_name="$user_input"
-        done
-    fi
+    while [ -z "${!var_name}" ]; do
+        read -p "$var_description: " user_input
+        eval $var_name="$user_input"
+    done
 }
 
 # Welcome message
@@ -26,15 +20,17 @@ echo
 # Create directory if it doesn't exist
 sudo mkdir -p /root/node.monitor
 
+# Predefined values
+ONLINE_STATUS_URL="https://api-testnet.lilypad.tech/metrics-dashboard/nodes"
+POW_SIGNAL_URL="https://api-sepolia.arbiscan.io/api"
+COOLDOWN_PERIOD=3600  # 1 hour in seconds
+POW_COOLDOWN_PERIOD=3600  # 1 hour in seconds
+TESTING_MODE=false
+
 # Prompt for variables
 prompt_variable NODE_WALLET_ID "Enter your Node Wallet ID"
-prompt_variable ONLINE_STATUS_URL "Enter the Online Status URL" "https://api-testnet.lilypad.tech/metrics-dashboard/nodes"
-prompt_variable POW_SIGNAL_URL "Enter the PoW Signal URL" "https://api-sepolia.arbiscan.io/api"
 prompt_variable TELEGRAM_BOT_TOKEN "Enter your Telegram Bot Token"
 prompt_variable TELEGRAM_CHAT_ID "Enter your Telegram Chat ID"
-prompt_variable COOLDOWN_PERIOD "Enter the cooldown period in seconds" "3600"
-prompt_variable POW_COOLDOWN_PERIOD "Enter the PoW check cooldown period in seconds" "3600"
-prompt_variable TESTING_MODE "Enable testing mode? (true/false)" "false"
 
 # Create .env file
 cat > /root/node.monitor/.env << EOL
