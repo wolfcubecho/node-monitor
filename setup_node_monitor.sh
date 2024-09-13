@@ -1,7 +1,14 @@
 #!/bin/bash
 
+# Ensure the script is sourced if piped to bash
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    if [[ "${0}" == "bash" ]]; then
+        source /dev/stdin
+        exit 0
+    fi
+fi
+
 set -e  # Exit immediately if a command exits with a non-zero status.
-set -x  # Print commands and their arguments as they are executed.
 
 echo "Starting setup script..."
 
@@ -11,12 +18,10 @@ prompt_variable() {
     local var_description="$2"
     local user_input
 
-    echo "Prompting for $var_name"
     while [ -z "${!var_name}" ]; do
         read -p "$var_description: " user_input
         eval "$var_name='$user_input'"
     done
-    echo "$var_name set to ${!var_name}"
 }
 
 echo "Welcome to the Node Monitor Setup!"
@@ -51,8 +56,6 @@ TESTING_MODE=$TESTING_MODE
 EOL
 
 echo ".env file created successfully."
-echo "Contents of .env file:"
-sudo cat /root/node.monitor/.env
 
 echo "Downloading main script..."
 sudo curl -o /root/node.monitor/node_monitor.sh https://raw.githubusercontent.com/wolfcubecho/node-monitor/main/node_monitor.sh
