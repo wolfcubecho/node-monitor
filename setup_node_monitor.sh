@@ -48,7 +48,7 @@ EOL
 echo ".env file created successfully."
 
 # Download the main script
-curl -o /root/node.monitor/node_monitor.sh https://raw.githubusercontent.com/your-repo/node-monitor/main/node_monitor.sh
+curl -o /root/node.monitor/node_monitor.sh https://raw.githubusercontent.com/wolfcubecho/node-monitor/main/setup_node_monitor.sh
 chmod +x /root/node.monitor/node_monitor.sh
 
 echo "Main script downloaded and made executable."
