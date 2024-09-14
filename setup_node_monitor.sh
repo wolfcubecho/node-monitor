@@ -2,7 +2,7 @@
 
 set -e  # Exit immediately if a command exits with a non-zero status.
 
-echo "Starting setup script..."
+echo "Starting Node Monitor Setup..."
 
 # Function to prompt for a variable
 prompt_variable() {
@@ -20,10 +20,6 @@ prompt_variable() {
         fi
     done
 }
-
-echo "Welcome to the Node Monitor Setup!"
-echo "This script will guide you through setting up the Node Monitor."
-echo
 
 echo "Creating directory..."
 sudo mkdir -p /root/node.monitor
