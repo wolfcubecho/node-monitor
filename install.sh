@@ -6,8 +6,8 @@ curl -o setup_node_monitor.sh https://raw.githubusercontent.com/wolfcubecho/node
 # Make it executable
 chmod +x setup_node_monitor.sh
 
-# Run the setup script
-sudo ./setup_node_monitor.sh
+# Run the setup script interactively
+sudo bash -c 'exec -a "Node Monitor Setup" ./setup_node_monitor.sh'
 
 # Clean up
 rm setup_node_monitor.sh
