@@ -2,28 +2,16 @@
 
 set -e  # Exit immediately if a command exits with a non-zero status.
 
-# Function to prompt for a variable
-prompt_variable() {
-    local var_name="$1"
-    local prompt_text="$2"
-    local value
-
-    while true; do
-        read -p "$prompt_text: " value
-        if [ -n "$value" ]; then
-            eval "$var_name='$value'"
-            break
-        else
-            echo "Input cannot be empty. Please try again."
-        fi
-    done
-}
+# Store the script's path
+SCRIPT_PATH="$0"
 
 echo "Starting Node Monitor Setup..."
 
-prompt_variable NODE_WALLET_ID "Enter your Node Wallet ID"
-prompt_variable TELEGRAM_BOT_TOKEN "Enter your Telegram Bot Token"
-prompt_variable TELEGRAM_CHAT_ID "Enter your Telegram Chat ID"
+# Check if required environment variables are set
+if [ -z "$NODE_WALLET_ID" ] || [ -z "$TELEGRAM_BOT_TOKEN" ] || [ -z "$TELEGRAM_CHAT_ID" ]; then
+    echo "Error: Required environment variables are not set."
+    exit 1
+fi
 
 echo "Creating directory..."
 sudo mkdir -p /root/node.monitor
@@ -83,5 +71,5 @@ echo "You can check its status with: systemctl status node_monitor.service"
 echo "And view logs with: journalctl -u node_monitor.service -f"
 
 # Self-delete the script
-rm -f "$0"
+rm -f "$SCRIPT_PATH"
 echo "Setup script has been removed."
