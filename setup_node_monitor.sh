@@ -2,6 +2,9 @@
 
 set -e  # Exit immediately if a command exits with a non-zero status.
 
+# Store the script's path
+SCRIPT_PATH="$0"
+
 # Function to prompt for a variable if it's not set
 prompt_variable() {
     local var_name="$1"
@@ -79,3 +82,9 @@ sudo systemctl start node_monitor.service
 echo "Setup complete! Your Node Monitor is now running."
 echo "You can check its status with: systemctl status node_monitor.service"
 echo "And view logs with: journalctl -u node_monitor.service -f"
+
+# Self-delete the script
+echo "Cleaning up..."
+rm -f "$SCRIPT_PATH"
+
+echo "Setup script has been removed."
