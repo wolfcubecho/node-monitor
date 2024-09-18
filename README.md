@@ -20,21 +20,26 @@ This repository contains a Node Monitor script for Lilypad nodes. It checks the 
 
 # Node Monitor
 
+# Node Monitor
+
 ## Installation
 
-To install the Node Monitor, run the following command:
+To install the Node Monitor, simply run the following command:
 
 ```bash
-curl -s https://raw.githubusercontent.com/wolfcubecho/node-monitor/main/install.sh | bash
+curl -s https://raw.githubusercontent.com/wolfcubecho/node-monitor/main/install.sh | sudo bash
 ```
 
-This will download and run the installation script. You will be prompted to enter:
+The script will:
+1. Download the necessary setup files
+2. Prompt you for the required information:
+   - Node Wallet ID
+   - Telegram Bot Token
+   - Telegram Chat ID
+3. Set up the Node Monitor service
+4. Clean up temporary files
 
-1. Your Node Wallet ID
-2. Your Telegram Bot Token
-3. Your Telegram Chat ID
-
-Follow the prompts and provide the required information.
+Note: If you've already set the required information as environment variables, the script will use those values without prompting.
 
 ## Usage
 
@@ -51,7 +56,6 @@ After installation, you can:
   ```
 
 For more detailed information, please refer to the full documentation.
-
 ## Configuration
 
 The setup script creates a `.env` file in `/root/node.monitor/` with your configuration. If you need to change any settings, edit this file and restart the service.
