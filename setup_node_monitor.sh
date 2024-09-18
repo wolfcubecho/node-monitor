@@ -9,15 +9,17 @@ SCRIPT_PATH="$0"
 prompt_variable() {
     local var_name="$1"
     local prompt_text="$2"
-    if [ -z "${!var_name}" ]; then
-        read -p "$prompt_text: " value
-        eval "$var_name='$value'"
-    fi
+    local value
+
+    # Use printf to safely handle special characters
+    printf -v prompt "%s: " "$prompt_text"
+    read -p "$prompt" value
+    printf -v "$var_name" "%s" "$value"
 }
 
 echo "Starting Node Monitor Setup..."
 
-# Prompt for variables if they're not set
+# Always prompt for variables
 prompt_variable NODE_WALLET_ID "Enter your Node Wallet ID"
 prompt_variable TELEGRAM_BOT_TOKEN "Enter your Telegram Bot Token"
 prompt_variable TELEGRAM_CHAT_ID "Enter your Telegram Chat ID"
@@ -34,11 +36,11 @@ TESTING_MODE=false
 
 echo "Creating .env file..."
 sudo tee /root/node.monitor/.env > /dev/null << EOF
-NODE_WALLET_ID="${NODE_WALLET_ID}"
-ONLINE_STATUS_URL="${ONLINE_STATUS_URL}"
-POW_SIGNAL_URL="${POW_SIGNAL_URL}"
-TELEGRAM_BOT_TOKEN="${TELEGRAM_BOT_TOKEN}"
-TELEGRAM_CHAT_ID="${TELEGRAM_CHAT_ID}"
+NODE_WALLET_ID='${NODE_WALLET_ID}'
+ONLINE_STATUS_URL='${ONLINE_STATUS_URL}'
+POW_SIGNAL_URL='${POW_SIGNAL_URL}'
+TELEGRAM_BOT_TOKEN='${TELEGRAM_BOT_TOKEN}'
+TELEGRAM_CHAT_ID='${TELEGRAM_CHAT_ID}'
 COOLDOWN_PERIOD=${COOLDOWN_PERIOD}
 POW_COOLDOWN_PERIOD=${POW_COOLDOWN_PERIOD}
 TESTING_MODE=${TESTING_MODE}
