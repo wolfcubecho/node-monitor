@@ -18,46 +18,28 @@ This repository contains a Node Monitor script for Lilypad nodes. It checks the 
 - jq
 - Telegram bot (for alerts)
 
-# Node Monitor
+##Installation
 
-## Installation
+To install the Node Monitor, run the following command:
+bashCopycurl -s https://raw.githubusercontent.com/wolfcubecho/node-monitor/main/install.sh | bash
+This will download and run the installation script. You will be prompted to enter:
 
-To install the Node Monitor, follow these steps:
+Your Node Wallet ID
+Your Telegram Bot Token
+Your Telegram Chat ID
 
-1. Open a terminal on your Linux system (Ubuntu 20.04 or later recommended).
+Follow the prompts and provide the required information.
 
-2. Run the following command:
-   ```
-   curl -s https://raw.githubusercontent.com/wolfcubecho/node-monitor/main/install.sh | bash
-   ```
-
-3. Follow the prompts to enter your Node Wallet ID, Telegram Bot Token, and Telegram Chat ID.
-
-4. Once complete, the Node Monitor service will start automatically.
-
-## Usage
-
+##Usage
 After installation, you can:
 
-- Check the status of the monitor:
-  ```
-  sudo systemctl status node_monitor.service
-  ```
+Check the status of the monitor:
+Copysudo systemctl status node_monitor.service
 
-- View the logs:
-  ```
-  sudo journalctl -u node_monitor.service -f
-  ```
+View the logs:
+Copysudo journalctl -u node_monitor.service -f
 
-- View logs in real-time:
-  ```bash
-  sudo journalctl -u node_monitor.service -f
-  ```
-
-- Restart the service:
-  ```bash
-  sudo systemctl restart node_monitor.service
-  ```
+For more detailed information, please refer to the full documentation.
 
 ## Configuration
 
