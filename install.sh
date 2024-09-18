@@ -2,17 +2,22 @@
 
 set -e  # Exit immediately if a command exits with a non-zero status.
 
-# Check if required environment variables are set
-if [ -z "${NODE_WALLET_ID}" ] || [ -z "${TELEGRAM_BOT_TOKEN}" ] || [ -z "${TELEGRAM_CHAT_ID}" ]; then
-    echo "Error: Required environment variables are not set."
-    echo "Please set the following environment variables and run the script again:"
-    echo "export NODE_WALLET_ID=your_wallet_id"
-    echo "export TELEGRAM_BOT_TOKEN=your_bot_token"
-    echo "export TELEGRAM_CHAT_ID=your_chat_id"
-    exit 1
-fi
+# Function to prompt for a variable if it's not set
+prompt_variable() {
+    local var_name="$1"
+    local prompt_text="$2"
+    if [ -z "${!var_name}" ]; then
+        read -p "$prompt_text: " value
+        export "$var_name=$value"
+    fi
+}
 
 echo "Starting Node Monitor Setup..."
+
+# Prompt for variables if they're not set
+prompt_variable NODE_WALLET_ID "Enter your Node Wallet ID"
+prompt_variable TELEGRAM_BOT_TOKEN "Enter your Telegram Bot Token"
+prompt_variable TELEGRAM_CHAT_ID "Enter your Telegram Chat ID"
 
 echo "Creating directory..."
 sudo mkdir -p /root/node.monitor
