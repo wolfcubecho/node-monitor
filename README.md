@@ -20,8 +20,6 @@ This repository contains a Node Monitor script for Lilypad nodes. It checks the 
 
 # Node Monitor
 
-# Node Monitor
-
 ## Installation
 
 To install the Node Monitor, simply run the following command:
