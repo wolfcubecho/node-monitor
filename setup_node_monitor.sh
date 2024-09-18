@@ -20,7 +20,7 @@ prompt_variable TELEGRAM_BOT_TOKEN "Enter your Telegram Bot Token"
 prompt_variable TELEGRAM_CHAT_ID "Enter your Telegram Chat ID"
 
 echo "Creating directory..."
-mkdir -p /root/node.monitor
+sudo mkdir -p /root/node.monitor
 
 echo "Setting predefined values..."
 ONLINE_STATUS_URL="https://api-testnet.lilypad.tech/metrics-dashboard/nodes"
@@ -30,7 +30,7 @@ POW_COOLDOWN_PERIOD=3600  # 1 hour in seconds
 TESTING_MODE=false
 
 echo "Creating .env file..."
-tee /root/node.monitor/.env > /dev/null << EOF
+sudo tee /root/node.monitor/.env > /dev/null << EOF
 NODE_WALLET_ID="${NODE_WALLET_ID}"
 ONLINE_STATUS_URL="${ONLINE_STATUS_URL}"
 POW_SIGNAL_URL="${POW_SIGNAL_URL}"
@@ -44,13 +44,13 @@ EOF
 echo ".env file created successfully."
 
 echo "Downloading main script..."
-curl -o /root/node.monitor/node_monitor.sh https://raw.githubusercontent.com/wolfcubecho/node-monitor/main/node_monitor.sh
-chmod +x /root/node.monitor/node_monitor.sh
+sudo curl -o /root/node.monitor/node_monitor.sh https://raw.githubusercontent.com/wolfcubecho/node-monitor/main/node_monitor.sh
+sudo chmod +x /root/node.monitor/node_monitor.sh
 
 echo "Main script downloaded and made executable."
 
 echo "Creating systemd service file..."
-tee /etc/systemd/system/node_monitor.service > /dev/null << EOF
+sudo tee /etc/systemd/system/node_monitor.service > /dev/null << EOF
 [Unit]
 Description=Node Monitor Service
 After=network.target
@@ -72,9 +72,9 @@ EOF
 echo "Systemd service file created."
 
 echo "Reloading systemd, enabling and starting the service..."
-systemctl daemon-reload
-systemctl enable node_monitor.service
-systemctl start node_monitor.service
+sudo systemctl daemon-reload
+sudo systemctl enable node_monitor.service
+sudo systemctl start node_monitor.service
 
 echo "Setup complete! Your Node Monitor is now running."
 echo "You can check its status with: systemctl status node_monitor.service"
