@@ -1,5 +1,11 @@
 #!/bin/bash
 
+set -x  # Enable debugging
+
+echo "Setup script started"
+pwd  # Print current directory
+ls -l  # List files in current directory
+
 set -e  # Exit immediately if a command exits with a non-zero status.
 
 # Store the script's path
