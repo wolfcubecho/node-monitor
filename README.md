@@ -18,7 +18,7 @@ This repository contains a Node Monitor script for Lilypad nodes. It checks the 
 - jq
 - Telegram bot (for alerts)
 
-##Installation
+## Installation
 
 To install the Node Monitor, run the following command:
 bashCopycurl -s https://raw.githubusercontent.com/wolfcubecho/node-monitor/main/install.sh | bash
@@ -30,7 +30,7 @@ Your Telegram Chat ID
 
 Follow the prompts and provide the required information.
 
-##Usage
+## Usage
 After installation, you can:
 
 Check the status of the monitor:
