@@ -1,18 +1,16 @@
 #!/bin/bash
 
-echo "Setup script started"
 set -e  # Exit immediately if a command exits with a non-zero status.
 
 # Store the script's path
 SCRIPT_PATH="$0"
 
-# Function to prompt for a variable if it's not set
+# Function to prompt for a variable
 prompt_variable() {
     local var_name="$1"
     local prompt_text="$2"
     local value
 
-    # Use printf to safely handle special characters
     printf -v prompt "%s: " "$prompt_text"
     read -p "$prompt" value
     printf -v "$var_name" "%s" "$value"
@@ -20,7 +18,6 @@ prompt_variable() {
 
 echo "Starting Node Monitor Setup..."
 
-# Always prompt for variables
 prompt_variable NODE_WALLET_ID "Enter your Node Wallet ID"
 prompt_variable TELEGRAM_BOT_TOKEN "Enter your Telegram Bot Token"
 prompt_variable TELEGRAM_CHAT_ID "Enter your Telegram Chat ID"
@@ -53,8 +50,6 @@ echo "Downloading main script..."
 sudo curl -o /root/node.monitor/node_monitor.sh https://raw.githubusercontent.com/wolfcubecho/node-monitor/main/node_monitor.sh
 sudo chmod +x /root/node.monitor/node_monitor.sh
 
-echo "Main script downloaded and made executable."
-
 echo "Creating systemd service file..."
 sudo tee /etc/systemd/system/node_monitor.service > /dev/null << EOF
 [Unit]
@@ -75,8 +70,6 @@ StandardError=journal
 WantedBy=multi-user.target
 EOF
 
-echo "Systemd service file created."
-
 echo "Reloading systemd, enabling and starting the service..."
 sudo systemctl daemon-reload
 sudo systemctl enable node_monitor.service
@@ -87,7 +80,5 @@ echo "You can check its status with: systemctl status node_monitor.service"
 echo "And view logs with: journalctl -u node_monitor.service -f"
 
 # Self-delete the script
-echo "Cleaning up..."
 rm -f "$SCRIPT_PATH"
-
 echo "Setup script has been removed."
