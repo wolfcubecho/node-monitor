@@ -52,8 +52,6 @@ After installation, you can:
 
 For more detailed information, please refer to the full documentation.
 
-For more detailed information, please refer to the full documentation.
-
 ## Configuration
 
 The setup script creates a `.env` file in `/root/node.monitor/` with your configuration. If you need to change any settings, edit this file and restart the service.
