@@ -3,7 +3,7 @@
 set -e  # Exit immediately if a command exits with a non-zero status.
 
 # Check if required environment variables are set
-if [ -z "$NODE_WALLET_ID" ] || [ -z "$TELEGRAM_BOT_TOKEN" ] || [ -z "$TELEGRAM_CHAT_ID" ]; then
+if [ -z "${NODE_WALLET_ID}" ] || [ -z "${TELEGRAM_BOT_TOKEN}" ] || [ -z "${TELEGRAM_CHAT_ID}" ]; then
     echo "Error: Required environment variables are not set."
     echo "Please set the following environment variables and run the script again:"
     echo "export NODE_WALLET_ID=your_wallet_id"
@@ -26,14 +26,14 @@ TESTING_MODE=false
 
 echo "Creating .env file..."
 sudo tee /root/node.monitor/.env > /dev/null << EOF
-NODE_WALLET_ID=$NODE_WALLET_ID
-ONLINE_STATUS_URL="$ONLINE_STATUS_URL"
-POW_SIGNAL_URL="$POW_SIGNAL_URL"
-TELEGRAM_BOT_TOKEN=$TELEGRAM_BOT_TOKEN
-TELEGRAM_CHAT_ID=$TELEGRAM_CHAT_ID
-COOLDOWN_PERIOD=$COOLDOWN_PERIOD
-POW_COOLDOWN_PERIOD=$POW_COOLDOWN_PERIOD
-TESTING_MODE=$TESTING_MODE
+NODE_WALLET_ID="${NODE_WALLET_ID}"
+ONLINE_STATUS_URL="${ONLINE_STATUS_URL}"
+POW_SIGNAL_URL="${POW_SIGNAL_URL}"
+TELEGRAM_BOT_TOKEN="${TELEGRAM_BOT_TOKEN}"
+TELEGRAM_CHAT_ID="${TELEGRAM_CHAT_ID}"
+COOLDOWN_PERIOD=${COOLDOWN_PERIOD}
+POW_COOLDOWN_PERIOD=${POW_COOLDOWN_PERIOD}
+TESTING_MODE=${TESTING_MODE}
 EOF
 
 echo ".env file created successfully."
