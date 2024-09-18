@@ -2,18 +2,21 @@
 
 set -e  # Exit immediately if a command exits with a non-zero status.
 
-# Store the script's path
-SCRIPT_PATH="$0"
-
 # Function to prompt for a variable
 prompt_variable() {
     local var_name="$1"
     local prompt_text="$2"
     local value
 
-    printf -v prompt "%s: " "$prompt_text"
-    read -p "$prompt" value
-    printf -v "$var_name" "%s" "$value"
+    while true; do
+        read -p "$prompt_text: " value
+        if [ -n "$value" ]; then
+            eval "$var_name='$value'"
+            break
+        else
+            echo "Input cannot be empty. Please try again."
+        fi
+    done
 }
 
 echo "Starting Node Monitor Setup..."
@@ -34,14 +37,14 @@ TESTING_MODE=false
 
 echo "Creating .env file..."
 sudo tee /root/node.monitor/.env > /dev/null << EOF
-NODE_WALLET_ID='${NODE_WALLET_ID}'
-ONLINE_STATUS_URL='${ONLINE_STATUS_URL}'
-POW_SIGNAL_URL='${POW_SIGNAL_URL}'
-TELEGRAM_BOT_TOKEN='${TELEGRAM_BOT_TOKEN}'
-TELEGRAM_CHAT_ID='${TELEGRAM_CHAT_ID}'
-COOLDOWN_PERIOD=${COOLDOWN_PERIOD}
-POW_COOLDOWN_PERIOD=${POW_COOLDOWN_PERIOD}
-TESTING_MODE=${TESTING_MODE}
+NODE_WALLET_ID='$NODE_WALLET_ID'
+ONLINE_STATUS_URL='$ONLINE_STATUS_URL'
+POW_SIGNAL_URL='$POW_SIGNAL_URL'
+TELEGRAM_BOT_TOKEN='$TELEGRAM_BOT_TOKEN'
+TELEGRAM_CHAT_ID='$TELEGRAM_CHAT_ID'
+COOLDOWN_PERIOD=$COOLDOWN_PERIOD
+POW_COOLDOWN_PERIOD=$POW_COOLDOWN_PERIOD
+TESTING_MODE=$TESTING_MODE
 EOF
 
 echo ".env file created successfully."
@@ -80,5 +83,5 @@ echo "You can check its status with: systemctl status node_monitor.service"
 echo "And view logs with: journalctl -u node_monitor.service -f"
 
 # Self-delete the script
-rm -f "$SCRIPT_PATH"
+rm -f "$0"
 echo "Setup script has been removed."
