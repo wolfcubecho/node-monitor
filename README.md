@@ -133,10 +133,6 @@ Refer to the comments in each script for details on what each parameter does.
 
 Contributions to improve the Node Monitor are welcome. Please feel free to submit pull requests or open issues for bugs and feature requests.
 
-## License
-
-[Specify your license here, e.g., MIT License]
-
 ## Additional Information
 
 This node monitor is an essential tool for Lilypad network participants. It helps ensure your node remains active and responsive, contributing effectively to the network. By monitoring multiple aspects of node operation, including online status, PoW signals, and real-time blockchain updates, it provides comprehensive oversight of your Lilypad node's health and performance.
