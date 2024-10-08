@@ -1,11 +1,27 @@
 #!/bin/bash
 
-WEBSOCKET_URL="INSERT YOUR WSS" #update your personal ARB SEP RPC
+# Load environment variables from .env file
+if [ -f "$(dirname "$0")/.env" ]; then
+    export $(grep -v '^#' "$(dirname "$0")/.env" | xargs)
+else
+    echo "Error: .env file not found"
+    exit 1
+fi
+
+# Check if required variables are set
+if [ -z "$INFURA_PROJECT_ID" ] || [ -z "$TELEGRAM_BOT_TOKEN" ] || [ -z "$TELEGRAM_CHAT_ID" ]; then
+    echo "Error: Required environment variables are not set in .env file"
+    exit 1
+fi
+
+WEBSOCKET_URL="wss://arbitrum-mainnet.infura.io/ws/v3/$INFURA_PROJECT_ID"
 LAST_PING_FILE="/tmp/last_websocket_ping"
 CHECK_INTERVAL=900  # Check every 15 minutes (900 seconds)
 ALERT_THRESHOLD=3960  # Alert if no ping for 1.1 hours (3960 seconds)
 
 echo "Starting WebSocket monitor..."
+echo "Using WebSocket URL: $WEBSOCKET_URL"
+echo "INFURA_PROJECT_ID: $INFURA_PROJECT_ID"
 
 # Function to send Telegram alert
 send_telegram_alert() {
@@ -44,11 +60,10 @@ check_last_ping() {
         last_ping=$(cat "$LAST_PING_FILE")
         current_time=$(date +%s)
         time_diff=$((current_time - last_ping))
-        
+
         if [ $time_diff -gt $ALERT_THRESHOLD ]; then
             message="⚠️ Alert: No WebSocket ping received in the last $(($time_diff / 60)) minutes."
             echo "$message"
-            send_telegram_alert "$message"
         else
             echo "Last ping was $time_diff seconds ago. All is well."
         fi
