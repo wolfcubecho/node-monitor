@@ -16,6 +16,7 @@ fi
 
 WEBSOCKET_URL="wss://arbitrum-mainnet.infura.io/ws/v3/$INFURA_PROJECT_ID"
 LAST_PING_FILE="/tmp/last_websocket_ping"
+WEBSOCKET_ALERT_FILE="/tmp/websocket_alert"
 CHECK_INTERVAL=900  # Check every 15 minutes (900 seconds)
 ALERT_THRESHOLD=3960  # Alert if no ping for 1.1 hours (3960 seconds)
 
@@ -23,13 +24,11 @@ echo "Starting WebSocket monitor..."
 echo "Using WebSocket URL: $WEBSOCKET_URL"
 echo "INFURA_PROJECT_ID: $INFURA_PROJECT_ID"
 
-# Function to send Telegram alert
-send_telegram_alert() {
+# Function to write alert to file (instead of sending directly)
+write_alert() {
     local message="$1"
-    curl -s -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
-        -d chat_id="$TELEGRAM_CHAT_ID" \
-        -d text="$message" \
-        -d parse_mode="HTML"
+    echo "$message" > "$WEBSOCKET_ALERT_FILE"
+    echo "Alert file created: $message"
 }
 
 # Function to handle WebSocket connection
@@ -44,6 +43,7 @@ handle_websocket() {
         echo "Received: $line"
         if [[ $line == *"error"* || $line == *"Error"* ]]; then
             echo "Error detected in WebSocket connection"
+            write_alert "Error in WebSocket connection: $line"
             return 1
         elif [[ $line == *"connected"* ]]; then
             echo "Connection established."
@@ -54,21 +54,23 @@ handle_websocket() {
     done
 }
 
-# Function to check last ping time and send alert if necessary
+# Function to check last ping time and write alert if necessary
 check_last_ping() {
     if [ -f "$LAST_PING_FILE" ]; then
         last_ping=$(cat "$LAST_PING_FILE")
         current_time=$(date +%s)
         time_diff=$((current_time - last_ping))
-
+        
         if [ $time_diff -gt $ALERT_THRESHOLD ]; then
-            message="⚠️ Alert: No WebSocket ping received in the last $(($time_diff / 60)) minutes."
+            message="No WebSocket ping received in the last $(($time_diff / 60)) minutes."
             echo "$message"
+            write_alert "$message"
         else
             echo "Last ping was $time_diff seconds ago. All is well."
         fi
     else
         echo "No ping file found. WebSocket connection may not be established yet."
+        write_alert "WebSocket connection not established. No ping file found."
     fi
 }
 
