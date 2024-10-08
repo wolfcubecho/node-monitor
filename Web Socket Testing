@@ -1,0 +1,67 @@
+#!/bin/bash
+
+WEBSOCKET_URL="INSERT YOUR WSS" #update your personal ARB SEP RPC
+LAST_PING_FILE="/tmp/last_websocket_ping"
+CHECK_INTERVAL=900  # Check every 15 minutes (900 seconds)
+ALERT_THRESHOLD=3960  # Alert if no ping for 1.1 hours (3960 seconds)
+
+echo "Starting WebSocket monitor..."
+
+# Function to send Telegram alert
+send_telegram_alert() {
+    local message="$1"
+    curl -s -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
+        -d chat_id="$TELEGRAM_CHAT_ID" \
+        -d text="$message" \
+        -d parse_mode="HTML"
+}
+
+# Function to handle WebSocket connection
+handle_websocket() {
+    (
+        echo '{"jsonrpc":"2.0","id": 1, "method": "eth_subscribe", "params": ["newHeads"]}'
+        while true; do
+            sleep 30
+            echo '{"jsonrpc":"2.0","id": 2, "method": "eth_blockNumber", "params": []}'
+        done
+    ) | wscat -c "$WEBSOCKET_URL" 2>&1 | while read -r line; do
+        echo "Received: $line"
+        if [[ $line == *"error"* || $line == *"Error"* ]]; then
+            echo "Error detected in WebSocket connection"
+            return 1
+        elif [[ $line == *"connected"* ]]; then
+            echo "Connection established."
+        elif [[ $line == *"result"* ]]; then
+            echo "$(date +%s)" > "$LAST_PING_FILE"
+            echo "Ping received at $(date)"
+        fi
+    done
+}
+
+# Function to check last ping time and send alert if necessary
+check_last_ping() {
+    if [ -f "$LAST_PING_FILE" ]; then
+        last_ping=$(cat "$LAST_PING_FILE")
+        current_time=$(date +%s)
+        time_diff=$((current_time - last_ping))
+        
+        if [ $time_diff -gt $ALERT_THRESHOLD ]; then
+            message="⚠️ Alert: No WebSocket ping received in the last $(($time_diff / 60)) minutes."
+            echo "$message"
+            send_telegram_alert "$message"
+        else
+            echo "Last ping was $time_diff seconds ago. All is well."
+        fi
+    else
+        echo "No ping file found. WebSocket connection may not be established yet."
+    fi
+}
+
+# Start WebSocket handling in the background
+handle_websocket &
+
+# Main loop for checking pings
+while true; do
+    check_last_ping
+    sleep $CHECK_INTERVAL
+done
